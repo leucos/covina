@@ -8,3 +8,4 @@ Displays John Hopkins data in Grafana
 docker-compose up
 ```
 
+Check http://127.0.0.1:3000 and login with `admin`/`admin`.

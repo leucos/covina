@@ -16,21 +16,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// CC maps countries to sort of country codes
-var CC = map[string]string{
-	"China":          "CN",
-	"Denmark":        "DK",
-	"France":         "FR",
-	"Germany":        "DE",
-	"Iceland":        "IS",
-	"Italy":          "IT",
-	"Norway":         "NO",
-	"Portugal":       "PT",
-	"Sweden":         "SE",
-	"Ukraine":        "UA",
-	"United Kingdom": "UK",
-}
-
 var casesURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
 var deathsURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
 
@@ -38,7 +23,7 @@ type record []string
 
 func main() {
 	influx := flag.String("influx", "http://127.0.0.1:8086", "influxdb server")
-	delay := flag.Int("delay", 30, "delay between runs (seconds)")
+	delay := flag.Int("delay", 600, "delay between runs (seconds)")
 
 	flag.Parse()
 
