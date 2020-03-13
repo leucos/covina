@@ -37,7 +37,9 @@ func main() {
 		err := run(*influx)
 
 		if err != nil {
+			// Only wait 30 seconds when errored
 			log.Errorf("unable to grab data: %s", err)
+			time.Sleep(30 * time.Second)
 		}
 		log.Infof("sleeping %d seconds before next run", *delay)
 		time.Sleep(time.Duration(*delay) * time.Second)
