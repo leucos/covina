@@ -9,6 +9,11 @@ services:
   influxdb:
     image: influxdb
   grafana:
-    image: grafana/grafana
+    build: './grafana'
+    container_name: 'grafana'
+    ports:
+      - '127.0.0.1:3000:3000'
+  # grafana:
+  #   image: grafana/grafana
     environment:
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel

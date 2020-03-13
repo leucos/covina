@@ -1,0 +1,10 @@
+datasources:
+- name: 'covina'
+  type: 'influxdb'
+  access: 'proxy'
+  org_id: 1
+  url: 'http://influxdb:8086'
+  database: 'covina'
+  is_default: true
+  version: 1
+  editable: true
