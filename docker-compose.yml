@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  covina:
+    build: .
+  influxdb:
+    image: influxdb
+  grafana:
+    image: grafana/grafana
+    environment:
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel
