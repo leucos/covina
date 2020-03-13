@@ -3,6 +3,9 @@ version: "2"
 services:
   covina:
     build: .
+    command: /app/covina -influx http://influxdb:8086
+    links:
+        - influxdb
   influxdb:
     image: influxdb
   grafana:

@@ -8,8 +8,7 @@ WORKDIR /src
 # hadolint ignore=SC2097,SC2098
 ENV GOOS=linux \
     GOARCH=amd64 \
-    CGO_ENABLED=0 \
-    GOPROXY=
+    CGO_ENABLED=0
 
 COPY go.mod .
 COPY go.sum .
