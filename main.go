@@ -19,11 +19,12 @@ var casesURL = "https://devops.works/covid.csv"
 var deathsURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
 
 type country struct {
-	points []point
-	cc     string
-	name   string
-	region string
-	sum    int
+	points    []point
+	cc        string
+	name      string
+	region    string
+	continent string
+	sum       int
 }
 
 type point struct {
@@ -34,6 +35,7 @@ type point struct {
 	sumCases     int
 	growthDeaths float64
 	growthCases  float64
+	population   int
 }
 
 func main() {
@@ -112,9 +114,10 @@ func extractEcdc(server, url string) error {
 
 		if _, ok := countries[cc]; !ok {
 			countries[cc] = &country{
-				cc:     cc,
-				name:   record[1],
-				region: record[6],
+				cc:        cc,
+				name:      record[1],
+				region:    record[6],
+				continent: Populations[cc].continent,
 			}
 		}
 
@@ -128,9 +131,10 @@ func extractEcdc(server, url string) error {
 		nd, _ := strconv.Atoi(record[3])
 
 		p := point{
-			date:      parsedWhen,
-			newCases:  nc,
-			newDeaths: nd,
+			date:       parsedWhen,
+			newCases:   nc,
+			newDeaths:  nd,
+			population: Populations[cc].population,
 		}
 
 		if len(countries[cc].points) > 0 {
@@ -177,10 +181,11 @@ func sendData(server string, rec map[string]*country, measurement string) error 
 			gh = geohash.Encode(Coordinates[entry.cc][0], Coordinates[entry.cc][1])
 		}
 		tags := map[string]string{
-			"country": entry.name,
-			"region":  entry.region,
-			"cc":      entry.cc,
-			"geohash": gh,
+			"country":   entry.name,
+			"region":    entry.region,
+			"continent": entry.continent,
+			"cc":        entry.cc,
+			"geohash":   gh,
 		}
 
 		for _, p := range entry.points {
@@ -191,6 +196,7 @@ func sendData(server string, rec map[string]*country, measurement string) error 
 				"sumCases":     p.sumCases,
 				"growthDeaths": p.growthDeaths,
 				"growthCases":  p.growthCases,
+				"population":   p.population,
 			}
 
 			// fmt.Printf("%#v\n", fields)
@@ -201,7 +207,7 @@ func sendData(server string, rec map[string]*country, measurement string) error 
 				p.date,
 			)
 			if err != nil {
-				log.Warn("unable to add new point", err.Error())
+				log.Warn("unable to add new point: %v", err.Error())
 				continue
 			}
 			bp.AddPoint(pt)
