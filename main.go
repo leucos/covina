@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
-	"io"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -16,10 +15,26 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var casesURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+var casesURL = "https://devops.works/covid.csv"
 var deathsURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
 
-type record []string
+type country struct {
+	points []point
+	cc     string
+	name   string
+	region string
+	sum    int
+}
+
+type point struct {
+	date         time.Time
+	newDeaths    int
+	newCases     int
+	sumDeaths    int
+	sumCases     int
+	growthDeaths float64
+	growthCases  float64
+}
 
 func main() {
 	influx := flag.String("influx", "http://127.0.0.1:8086", "influxdb server")
@@ -60,44 +75,162 @@ func run(influx string) error {
 	}
 
 	log.Infof("shipping cases data to influxdb")
-	err = extractData(influx, casesURL, "cases")
+	err = extractEcdc(influx, casesURL)
 	if err != nil {
 		return fmt.Errorf("unable to extract cases: %v", err)
-	}
-
-	log.Infof("shipping death data to influxdb")
-	extractData(influx, deathsURL, "deaths")
-	if err != nil {
-		return fmt.Errorf("unable to extract deaths: %v", err)
 	}
 
 	return nil
 }
 
-func extractData(server, url, measurement string) error {
+func extractEcdc(server, url string) error {
 	r, err := http.Get(url)
 
 	if err != nil {
 		return fmt.Errorf("unable to read source: %v", err)
 	}
 
+	defer r.Body.Close()
+
 	csv := csv.NewReader(r.Body)
 	defer r.Body.Close()
 
-	var records []record
-	for {
-		record, err := csv.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return fmt.Errorf("unable to read CSV record: %v", err)
-		}
+	countries := make(map[string]*country)
 
-		records = append(records, record)
+	// Skip first record
+	csv.Read()
+	all, _ := csv.ReadAll()
+
+	// Reverse array entries
+	for i, j := 0, len(all)-1; i < j; i, j = i+1, j-1 {
+		all[i], all[j] = all[j], all[i]
 	}
 
-	return sendData(server, records, measurement)
+	for _, record := range all {
+		// record, err := csv.Read()
+		// if err == io.EOF {
+		// 	break
+		// }
+		// if err != nil {
+		// 	return fmt.Errorf("unable to read CSV record: %v", err)
+		// }
+
+		cc := record[4]
+
+		if _, ok := countries[cc]; !ok {
+			countries[cc] = &country{
+				cc:     cc,
+				name:   record[1],
+				region: record[6],
+			}
+		}
+
+		parsedWhen, err := time.Parse("2006/01/02", record[0])
+		if err != nil {
+			log.Warnf("unable to parse time %s: %v", record[0], err)
+			continue
+		}
+
+		nc, _ := strconv.Atoi(record[2])
+		nd, _ := strconv.Atoi(record[3])
+
+		p := point{
+			date:      parsedWhen,
+			newCases:  nc,
+			newDeaths: nd,
+		}
+
+		if len(countries[cc].points) > 0 {
+			prev := countries[cc].points[len(countries[cc].points)-1]
+			p.sumDeaths = prev.sumDeaths + p.newDeaths
+			p.sumCases = prev.sumCases + p.newCases
+			if prev.newDeaths != 0 {
+				p.growthDeaths = float64(p.newDeaths) / float64(prev.newDeaths)
+			}
+			if prev.newCases != 0 {
+				p.growthCases = float64(p.newCases) / float64(prev.newCases)
+			}
+		}
+
+		countries[cc].points = append(countries[cc].points, p)
+		if cc == "FR" {
+			fmt.Printf("%#v\n", p)
+		}
+	}
+
+	return sendData(server, countries, "covid")
+}
+
+func sendData(server string, rec map[string]*country, measurement string) error {
+	c, err := influx.NewHTTPClient(influx.HTTPConfig{
+		Addr: server,
+	})
+	if err != nil {
+		return fmt.Errorf("error creating InfluxDB Client: %v", err.Error())
+	}
+
+	rand.Seed(42)
+
+	bp, _ := influx.NewBatchPoints(influx.BatchPointsConfig{
+		Database:  "covina",
+		Precision: "us",
+	})
+
+	for _, entry := range rec {
+		var gh string
+		if _, ok := Coordinates[entry.cc]; !ok {
+			log.Warnf("unable to find geohash for %s", entry.cc)
+		} else {
+			gh = geohash.Encode(Coordinates[entry.cc][0], Coordinates[entry.cc][1])
+		}
+		tags := map[string]string{
+			"country": entry.name,
+			"region":  entry.region,
+			"cc":      entry.cc,
+			"geohash": gh,
+		}
+
+		for _, p := range entry.points {
+			fields := map[string]interface{}{
+				"newCases":     p.newCases,
+				"newDeaths":    p.newDeaths,
+				"sumDeaths":    p.sumDeaths,
+				"sumCases":     p.sumCases,
+				"growthDeaths": p.growthDeaths,
+				"growthCases":  p.growthCases,
+			}
+
+			// fmt.Printf("%#v\n", fields)
+			pt, err := influx.NewPoint(
+				measurement,
+				tags,
+				fields,
+				p.date,
+			)
+			if err != nil {
+				log.Warn("unable to add new point", err.Error())
+				continue
+			}
+			bp.AddPoint(pt)
+		}
+	}
+
+	err = c.Write(bp)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
+}
+
+func remap(country string) string {
+	short, ok := CC[country]
+
+	if ok {
+		return short
+	}
+
+	return country
 }
 
 func createDatabase(server string) error {
@@ -148,99 +281,4 @@ func dropDatabase(server string) error {
 	}
 
 	return nil
-}
-
-func sendData(server string, rec []record, measurement string) error {
-	// First record has fields
-	header, rec := rec[0], rec[1:]
-
-	// times holds the list of dates for the time series
-	times := header[4:]
-
-	c, err := influx.NewHTTPClient(influx.HTTPConfig{
-		Addr: server,
-	})
-	if err != nil {
-		return fmt.Errorf("error creating InfluxDB Client: %v", err.Error())
-	}
-
-	rand.Seed(42)
-
-	bp, _ := influx.NewBatchPoints(influx.BatchPointsConfig{
-		Database:  "covina",
-		Precision: "us",
-	})
-
-	for _, entry := range rec {
-		lat, _ := strconv.ParseFloat(entry[2], 64)
-		lng, _ := strconv.ParseFloat(entry[3], 64)
-		tags := map[string]string{
-			"province": fmt.Sprintf("%s:%s", entry[1], entry[0]),
-			"cc":       remap(entry[1]),
-			"geohash":  geohash.Encode(lat, lng),
-		}
-
-		var lastValue float64
-		var lastGrowth float64
-		var growth float64
-		var growthRate float64
-
-		// Now loop over times
-		for index, when := range times {
-
-			parsedWhen, err := time.Parse("1/2/06", when)
-			if err != nil {
-				log.Warn("unable to parse time %s: %v", when, err)
-				continue
-			}
-
-			current, _ := strconv.ParseFloat(entry[index+4], 64)
-
-			growth = current - lastValue
-
-			if lastGrowth > 0 {
-				growthRate = growth / lastGrowth
-			}
-
-			lastGrowth = growth
-			lastValue = current
-
-			fields := map[string]interface{}{
-				"latitude":    entry[2],
-				"longitude":   entry[3],
-				"sick":        entry[index+4],
-				"growth":      growth,
-				"growth_rate": growthRate,
-			}
-
-			pt, err := influx.NewPoint(
-				measurement,
-				tags,
-				fields,
-				parsedWhen,
-			)
-			if err != nil {
-				log.Warn("unable to add new point", err.Error())
-				continue
-			}
-			bp.AddPoint(pt)
-		}
-	}
-
-	err = c.Write(bp)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return nil
-}
-
-func remap(country string) string {
-	short, ok := CC[country]
-
-	if ok {
-		return short
-	}
-
-	return country
 }

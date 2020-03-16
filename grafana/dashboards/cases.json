@@ -15,7 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "iteration": 1584120071737,
+  "id": 335,
+  "iteration": 1584354884262,
   "links": [],
   "panels": [
     {
@@ -56,14 +57,14 @@
         "justifyMode": "auto",
         "orientation": "auto"
       },
-      "pluginVersion": "6.6.2",
-      "repeat": "province",
+      "pluginVersion": "6.6.1",
+      "repeat": "country",
       "repeatDirection": "h",
       "scopedVars": {
-        "province": {
+        "country": {
           "selected": true,
-          "text": "France:France",
-          "value": "France:France"
+          "text": "France",
+          "value": "France"
         }
       },
       "targets": [
@@ -82,7 +83,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -91,7 +92,7 @@
             [
               {
                 "params": [
-                  "sick"
+                  "sumCases"
                 ],
                 "type": "field"
               },
@@ -103,16 +104,16 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "$province",
+      "title": "$country",
       "type": "stat"
     },
     {
@@ -156,7 +157,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "cases $tag_province",
+          "alias": "cases $tag_country",
           "groupBy": [
             {
               "params": [
@@ -172,18 +173,12 @@
             },
             {
               "params": [
-                "province"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
                 "none"
               ],
               "type": "fill"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -192,7 +187,7 @@
             [
               {
                 "params": [
-                  "sick"
+                  "sumCases"
                 ],
                 "type": "field"
               },
@@ -204,9 +199,9 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         }
@@ -215,7 +210,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Cases ($province)",
+      "title": "Cases ($country)",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -278,19 +273,10 @@
       "mapCenterLatitude": 0,
       "mapCenterLongitude": 0,
       "maxDataPoints": 1,
-      "mouseWheelZoom": false,
       "options": {},
       "showLegend": true,
       "stickyLabels": false,
       "tableLabel": "cc",
-      "tableQueryOptions": {
-        "geohashField": "geohash",
-        "labelField": "cc",
-        "latitudeField": "latitude",
-        "longitudeField": "longitude",
-        "metricField": "metric",
-        "queryType": "geohash"
-      },
       "targets": [
         {
           "groupBy": [
@@ -307,7 +293,7 @@
               "type": "tag"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -316,7 +302,7 @@
             [
               {
                 "params": [
-                  "sick"
+                  "sumCases"
                 ],
                 "type": "field"
               },
@@ -334,9 +320,9 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         }
@@ -391,7 +377,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "growth $tag_province",
+          "alias": "growth $tag_country",
           "groupBy": [
             {
               "params": [
@@ -401,7 +387,7 @@
             },
             {
               "params": [
-                "province"
+                "country"
               ],
               "type": "tag"
             },
@@ -412,7 +398,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -421,7 +407,7 @@
             [
               {
                 "params": [
-                  "growth"
+                  "newCases"
                 ],
                 "type": "field"
               },
@@ -433,9 +419,9 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         }
@@ -444,7 +430,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "New cases ($province)",
+      "title": "New cases ($country)",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -522,7 +508,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "growth rate $tag_province",
+          "alias": "growth rate $tag_country",
           "groupBy": [
             {
               "params": [
@@ -532,7 +518,7 @@
             },
             {
               "params": [
-                "province"
+                "country"
               ],
               "type": "tag"
             },
@@ -543,7 +529,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -552,7 +538,7 @@
             [
               {
                 "params": [
-                  "growth_rate"
+                  "growthCases"
                 ],
                 "type": "field"
               },
@@ -564,14 +550,14 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         },
         {
-          "alias": "avg $tag_province",
+          "alias": "avg $tag_country",
           "groupBy": [
             {
               "params": [
@@ -581,7 +567,7 @@
             },
             {
               "params": [
-                "province"
+                "country"
               ],
               "type": "tag"
             },
@@ -592,7 +578,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "cases",
+          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",
@@ -601,7 +587,7 @@
             [
               {
                 "params": [
-                  "growth_rate"
+                  "growthCases"
                 ],
                 "type": "field"
               },
@@ -619,9 +605,9 @@
           ],
           "tags": [
             {
-              "key": "province",
+              "key": "country",
               "operator": "=~",
-              "value": "/^$province$/"
+              "value": "/^$country$/"
             }
           ]
         }
@@ -630,7 +616,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Growth rate ($province)",
+      "title": "Growth rate ($country)",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -678,21 +664,21 @@
       {
         "allValue": null,
         "current": {
-          "text": "France:France",
+          "text": "France",
           "value": [
-            "France:France"
+            "France"
           ]
         },
         "datasource": "covina",
-        "definition": "SHOW TAG  VALUES WITH KEY= \"province\"",
+        "definition": "SHOW TAG  VALUES WITH KEY= \"country\"",
         "hide": 0,
         "includeAll": false,
-        "label": "Place",
+        "label": "Country",
         "multi": true,
-        "name": "province",
+        "name": "country",
         "options": [],
-        "query": "SHOW TAG  VALUES WITH KEY= \"province\"",
-        "refresh": 1,
+        "query": "SHOW TAG  VALUES WITH KEY= \"country\"",
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -725,5 +711,5 @@
   "timezone": "",
   "title": "Cases",
   "uid": "Yqhy1iuWk",
-  "version": 1
+  "version": 39
 }

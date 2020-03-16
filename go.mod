@@ -3,6 +3,8 @@ module github.com/leucos/covina
 go 1.13
 
 require (
+	github.com/extrame/ole2 v0.0.0-20160812065207-d69429661ad7 // indirect
+	github.com/extrame/xls v0.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/influxdata/influxdb1-client v0.0.0-20191209144304-8bf82d3c094d
 	github.com/kr/pretty v0.1.0 // indirect
