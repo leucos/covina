@@ -54,7 +54,8 @@ func main() {
 		if err != nil {
 			// Only wait 30 seconds when errored
 			log.Errorf("unable to grab data: %s", err)
-			time.Sleep(30 * time.Second)
+			time.Sleep(10 * time.Second)
+			continue
 		}
 		log.Infof("sleeping %d seconds before next run", *delay)
 		time.Sleep(time.Duration(*delay) * time.Second)
@@ -107,14 +108,6 @@ func extractEcdc(server, url string) error {
 	}
 
 	for _, record := range all {
-		// record, err := csv.Read()
-		// if err == io.EOF {
-		// 	break
-		// }
-		// if err != nil {
-		// 	return fmt.Errorf("unable to read CSV record: %v", err)
-		// }
-
 		cc := record[4]
 
 		if _, ok := countries[cc]; !ok {
@@ -153,9 +146,9 @@ func extractEcdc(server, url string) error {
 		}
 
 		countries[cc].points = append(countries[cc].points, p)
-		if cc == "FR" {
-			fmt.Printf("%#v\n", p)
-		}
+		// if cc == "FR" {
+		// 	fmt.Printf("%#v\n", p)
+		// }
 	}
 
 	return sendData(server, countries, "covid")

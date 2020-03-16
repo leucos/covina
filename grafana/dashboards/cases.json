@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": 335,
-  "iteration": 1584354884262,
+  "iteration": 1584354957210,
   "links": [],
   "panels": [
     {
@@ -128,7 +128,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 12
+        "y": 6
       },
       "hiddenSeries": false,
       "id": 2,
@@ -262,7 +262,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 6
       },
       "hideEmpty": false,
       "hideZero": false,
@@ -348,7 +348,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 17
       },
       "hiddenSeries": false,
       "id": 3,
@@ -479,7 +479,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 17
       },
       "hiddenSeries": false,
       "id": 6,
@@ -612,7 +612,16 @@
           ]
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 1,
+          "yaxis": "left"
+        }
+      ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -711,5 +720,5 @@
   "timezone": "",
   "title": "Cases",
   "uid": "Yqhy1iuWk",
-  "version": 39
+  "version": 40
 }

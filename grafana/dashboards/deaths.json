@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": 339,
-  "iteration": 1584354933021,
+  "iteration": 1584355417660,
   "links": [],
   "panels": [
     {
@@ -612,7 +612,16 @@
           ]
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 1,
+          "yaxis": "left"
+        }
+      ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -711,5 +720,5 @@
   "timezone": "",
   "title": "Deaths",
   "uid": "SeDempXWz",
-  "version": 6
+  "version": 7
 }
