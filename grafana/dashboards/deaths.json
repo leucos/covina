@@ -157,7 +157,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "cases $tag_country",
+          "alias": "deaths $tag_country",
           "groupBy": [
             {
               "params": [
