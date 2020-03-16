@@ -1,6 +1,8 @@
 # Covina
 
-Displays John Hopkins data in Grafana
+Displays infection data in Grafana
+
+Source: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
 ## Quick start
 
