@@ -110,25 +110,25 @@ func extractEcdc(server, url string) error {
 	}
 
 	for _, record := range all {
-		cc := record[4]
+		cc := record[7]
 
 		if _, ok := countries[cc]; !ok {
 			countries[cc] = &country{
 				cc:        cc,
-				name:      record[1],
-				region:    record[6],
+				name:      record[6],
 				continent: Populations[cc].continent,
 			}
 		}
 
-		parsedWhen, err := time.Parse("2006/01/02", record[0])
+		dte := fmt.Sprintf("%s/%s/%s", record[3], record[2], record[1])
+		parsedWhen, err := time.Parse("2006/1/2", dte)
 		if err != nil {
-			log.Warnf("unable to parse time %s: %v", record[0], err)
+			log.Warnf("unable to parse time %s: %v", dte, err)
 			continue
 		}
 
-		nc, _ := strconv.Atoi(record[2])
-		nd, _ := strconv.Atoi(record[3])
+		nc, _ := strconv.Atoi(record[4])
+		nd, _ := strconv.Atoi(record[5])
 
 		p := point{
 			date:       parsedWhen,
