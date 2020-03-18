@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 342,
   "links": [],
   "panels": [
     {
@@ -143,16 +142,25 @@
       "mapCenterLatitude": 0,
       "mapCenterLongitude": 0,
       "maxDataPoints": 1,
+      "mouseWheelZoom": false,
       "options": {},
       "showLegend": true,
       "stickyLabels": false,
       "tableLabel": "cc",
+      "tableQueryOptions": {
+        "geohashField": "geohash",
+        "labelField": "country",
+        "latitudeField": "latitude",
+        "longitudeField": "longitude",
+        "metricField": "metric",
+        "queryType": "geohash"
+      },
       "targets": [
         {
           "groupBy": [
             {
               "params": [
-                "cc"
+                "country"
               ],
               "type": "tag"
             },
@@ -188,7 +196,49 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "continent",
+              "operator": "=",
+              "value": "AF"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "AS"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "EU"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "NA"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "NA"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "OC"
+            },
+            {
+              "condition": "OR",
+              "key": "continent",
+              "operator": "=",
+              "value": "SA"
+            }
+          ]
         }
       ],
       "thresholds": "100,1000",
@@ -228,5 +278,5 @@
   "timezone": "",
   "title": "All countries",
   "uid": "d2FL7wXZk",
-  "version": 4
+  "version": 1
 }
