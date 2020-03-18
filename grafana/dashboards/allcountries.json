@@ -15,6 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
+  "iteration": 1584542618049,
   "links": [],
   "panels": [
     {
@@ -100,19 +101,47 @@
                 "type": "field"
               },
               {
+                "params": [],
+                "type": "last"
+              },
+              {
                 "params": [
                   "Cases"
                 ],
                 "type": "alias"
               }
+            ],
+            [
+              {
+                "params": [
+                  "sumDeaths"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "Deaths"
+                ],
+                "type": "alias"
+              }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "continent",
+              "operator": "=~",
+              "value": "/^$continent$/"
+            }
+          ]
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Country Summary",
       "transform": "table",
       "type": "table"
     },
@@ -171,6 +200,7 @@
               "type": "tag"
             }
           ],
+          "hide": true,
           "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
@@ -239,12 +269,60 @@
               "value": "SA"
             }
           ]
+        },
+        {
+          "groupBy": [
+            {
+              "params": [
+                "country"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "geohash"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "covid",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "sumCases"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "metric"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "continent",
+              "operator": "=~",
+              "value": "/^$continent$/"
+            }
+          ]
         }
       ],
       "thresholds": "100,1000",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Cases",
       "type": "grafana-worldmap-panel",
       "unitPlural": "",
       "unitSingle": "",
@@ -255,7 +333,71 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "covina",
+        "definition": "SHOW TAG  VALUES WITH KEY = \"continent\"",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Continent",
+        "multi": true,
+        "name": "continent",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "AF",
+            "value": "AF"
+          },
+          {
+            "selected": false,
+            "text": "AS",
+            "value": "AS"
+          },
+          {
+            "selected": false,
+            "text": "EU",
+            "value": "EU"
+          },
+          {
+            "selected": false,
+            "text": "NA",
+            "value": "NA"
+          },
+          {
+            "selected": false,
+            "text": "OC",
+            "value": "OC"
+          },
+          {
+            "selected": false,
+            "text": "SA",
+            "value": "SA"
+          }
+        ],
+        "query": "SHOW TAG  VALUES WITH KEY = \"continent\"",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-2d",
