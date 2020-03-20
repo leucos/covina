@@ -219,7 +219,8 @@ func sendData(icfg influxConfig, rec map[string]*country, measurement string) er
 
 	err = c.Write(bp)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return err
 	}
 
 	return nil
