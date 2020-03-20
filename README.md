@@ -9,6 +9,7 @@ Source: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geo
 ### Insecure impatient mode
 
 ```bash
+echo "INFLUXDB_HTTP_AUTH_ENABLED=false" > .env
 docker-compose up --build
 ```
 
