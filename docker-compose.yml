@@ -17,3 +17,8 @@ services:
   #   image: grafana/grafana
     environment:
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+    volumes:
+    # Data persistency
+    # sudo mkdir -p /srv/docker/grafana/data; chown 472:472 /srv/docker/grafana/data
+    - /srv/docker/grafana/data:/var/lib/grafana

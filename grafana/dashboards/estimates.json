@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "id": 341,
-  "iteration": 1584400838668,
+  "iteration": 1584562779563,
   "links": [],
   "panels": [
     {
@@ -471,7 +470,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.6.1",
+      "pluginVersion": "6.6.2",
       "targets": [
         {
           "groupBy": [
@@ -491,7 +490,7 @@
           "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT  (last(\"sumDeaths\")/last(\"sumCases\")) * 100 FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT  (last(\"sumDeaths\")/last(\"sumCases\")) * 100 FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -562,7 +561,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.6.1",
+      "pluginVersion": "6.6.2",
       "targets": [
         {
           "groupBy": [
@@ -582,7 +581,7 @@
           "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -652,7 +651,7 @@
         "justifyMode": "auto",
         "orientation": "auto"
       },
-      "pluginVersion": "6.6.1",
+      "pluginVersion": "6.6.2",
       "targets": [
         {
           "groupBy": [
@@ -671,7 +670,7 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT last(\"population\")  *  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT last(\"population\")  *  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -755,7 +754,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.6.1",
+      "pluginVersion": "6.6.2",
       "targets": [
         {
           "groupBy": [
@@ -775,7 +774,7 @@
           "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT  100*last(\"sumCases\")/last(\"population\") FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT  100*last(\"sumCases\")/last(\"population\") FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -884,5 +883,5 @@
   "timezone": "",
   "title": "Estimates",
   "uid": "HH3zafXWz",
-  "version": 18
+  "version": 1
 }
