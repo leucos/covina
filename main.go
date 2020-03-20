@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/csv"
-	"flag"
+
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -11,6 +11,7 @@ import (
 
 	influx "github.com/influxdata/influxdb1-client/v2"
 	"github.com/mmcloughlin/geohash"
+	flag "github.com/namsral/flag"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
@@ -38,9 +39,17 @@ type point struct {
 	population   int
 }
 
+type influxConfig struct {
+	influx influx.HTTPConfig
+	db     string
+}
+
 func main() {
-	influx := flag.String("influx", "http://127.0.0.1:8086", "influxdb server")
+	iserver := flag.String("server", "http://127.0.0.1:8086", "influxdb server")
 	delay := flag.Int("delay", 600, "delay between runs (seconds)")
+	idb := flag.String("db", "covina", "influxdb database")
+	iuser := flag.String("user", "", "influxdb user")
+	ipass := flag.String("pass", "", "influxdb password")
 
 	flag.Parse()
 
@@ -49,9 +58,20 @@ func main() {
 	}
 	logrus.SetFormatter(formatter)
 
-	log.Infof("influxdb server set to %s", *influx)
+	conf := influxConfig{
+		influx: influx.HTTPConfig{
+			Addr:     *iserver,
+			Username: *iuser,
+			Password: *ipass,
+		},
+		db: *idb,
+	}
+
+	log.Infof("influxdb server set to %s", conf.influx.Addr)
+	log.Infof("influxdb user set to %s", conf.influx.Username)
+
 	for {
-		err := run(*influx)
+		err := run(conf)
 
 		if err != nil {
 			// Only wait 30 seconds when errored
@@ -64,21 +84,9 @@ func main() {
 	}
 }
 
-func run(influx string) error {
-	log.Infof("dropping database")
-	err := dropDatabase(influx)
-	if err != nil {
-		return fmt.Errorf("unable to create db: %v", err)
-	}
-
-	log.Infof("creating database")
-	createDatabase(influx)
-	if err != nil {
-		return fmt.Errorf("unable to create db: %v", err)
-	}
-
+func run(icfg influxConfig) error {
 	log.Infof("shipping cases data to influxdb")
-	err = extractEcdc(influx, casesURL)
+	err := extractEcdc(icfg, casesURL)
 	if err != nil {
 		return fmt.Errorf("unable to extract cases: %v", err)
 	}
@@ -86,7 +94,7 @@ func run(influx string) error {
 	return nil
 }
 
-func extractEcdc(server, url string) error {
+func extractEcdc(icfg influxConfig, url string) error {
 	r, err := http.Get(url)
 
 	if err != nil {
@@ -150,18 +158,13 @@ func extractEcdc(server, url string) error {
 		}
 
 		countries[cc].points = append(countries[cc].points, p)
-		// if cc == "FR" {
-		// 	fmt.Printf("%#v\n", p)
-		// }
 	}
 
-	return sendData(server, countries, "covid")
+	return sendData(icfg, countries, "covid")
 }
 
-func sendData(server string, rec map[string]*country, measurement string) error {
-	c, err := influx.NewHTTPClient(influx.HTTPConfig{
-		Addr: server,
-	})
+func sendData(icfg influxConfig, rec map[string]*country, measurement string) error {
+	c, err := influx.NewHTTPClient(icfg.influx)
 	if err != nil {
 		return fmt.Errorf("error creating InfluxDB Client: %v", err.Error())
 	}
@@ -230,54 +233,4 @@ func remap(country string) string {
 	}
 
 	return country
-}
-
-func createDatabase(server string) error {
-	c, err := influx.NewHTTPClient(influx.HTTPConfig{
-		Addr: server,
-	})
-	if err != nil {
-		return fmt.Errorf("error creating InfluxDB Client: %s", err.Error())
-	}
-
-	q := influx.Query{
-		Command: "CREATE DATABASE covina",
-	}
-
-	response, err := c.Query(q)
-
-	if err != nil {
-		return err
-	}
-
-	if response.Error() != nil {
-		return response.Error()
-	}
-
-	return nil
-}
-
-func dropDatabase(server string) error {
-	c, err := influx.NewHTTPClient(influx.HTTPConfig{
-		Addr: server,
-	})
-	if err != nil {
-		return fmt.Errorf("error creating InfluxDB Client: %s", err.Error())
-	}
-
-	q := influx.Query{
-		Command: "DROP DATABASE covina",
-	}
-
-	response, err := c.Query(q)
-
-	if err != nil {
-		return err
-	}
-
-	if response.Error() != nil {
-		return response.Error()
-	}
-
-	return nil
 }

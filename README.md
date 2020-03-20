@@ -6,11 +6,36 @@ Source: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geo
 
 ## Quick start
 
+### Insecure impatient mode
+
 ```bash
 docker-compose up --build
 ```
 
 Check http://127.0.0.1:3000 and login with `admin`/`admin`.
+
+### Better
+
+Copy `.env.sample` to `.env`
+
+Define those variables in `.env`:
+
+- `GF_SECURITY_ADMIN_USER`: grafana admin user
+- `GF_SECURITY_ADMIN_PASSWORD`: grafana admin pass
+- `INFLUXDB_READ_USER`: influxdb grafana user
+- `INFLUXDB_READ_USER_PASSWORD`: influxdb grafana user password
+- `INFLUXDB_WRITE_USER`: covina user
+- `INFLUXDB_WRITE_USER_PASSWORD`: covina user password
+- `INFLUXDB_ADMIN_USER`: influx admin user (not used, but required)
+- `INFLUXDB_ADMIN_PASSWORD` influx admin password (not used, but required)
+
+
+```bash
+docker-compose up --build
+```
+
+Check http://127.0.0.1:3000 and login with `GF_SECURITY_ADMIN_USER` /
+`GF_SECURITY_ADMIN_PASSWORD`.
 
 ## Contributions
 

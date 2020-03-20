@@ -9,6 +9,7 @@ require (
 	github.com/influxdata/influxdb1-client v0.0.0-20191209144304-8bf82d3c094d
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mmcloughlin/geohash v0.9.0
+	github.com/namsral/flag v1.7.4-pre
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0 // indirect
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
