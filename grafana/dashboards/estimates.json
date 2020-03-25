@@ -697,7 +697,7 @@
       "type": "stat"
     },
     {
-      "content": "\n# Fatalities estimation\n\nInsert `prevalence` (in percent) to calculate the cumulative falatilies for this country.\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly, but countries take counter-measures\n- CFR is under-estimated since time symptoms and and death varies between 2 and 8 weeks (see refs)\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n\n",
+      "content": "\n# Fatalities estimation\n\nInsert `prevalence` (in percent) to calculate the cumulative falatilies for this country.\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly, but countries take counter-measures\n- CFR is under-estimated since time symptoms and death varies between 2 and 8 weeks (see refs)\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n\n",
       "datasource": null,
       "gridPos": {
         "h": 8,
