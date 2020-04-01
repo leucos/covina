@@ -10,7 +10,6 @@ import (
 	"time"
 
 	influx "github.com/influxdata/influxdb1-client/v2"
-	"github.com/mmcloughlin/geohash"
 	flag "github.com/namsral/flag"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
@@ -19,23 +18,24 @@ import (
 var casesURL = "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv/"
 
 type country struct {
-	points    []point
-	cc        string
-	name      string
-	region    string
-	continent string
-	sum       int
+	points     []point
+	cc         string
+	name       string
+	region     string
+	continent  string
+	sum        int
+	population int
 }
 
 type point struct {
-	date         time.Time
-	newDeaths    int
-	newCases     int
-	sumDeaths    int
-	sumCases     int
-	growthDeaths float64
-	growthCases  float64
-	population   int
+	date           time.Time
+	newDeaths      int
+	newCases       int
+	newCasesBuffer []int
+	sumDeaths      int
+	sumCases       int
+	growthDeaths   float64
+	growthCases    float64
 }
 
 type influxConfig struct {
@@ -123,7 +123,7 @@ func extractEcdc(icfg influxConfig, url string) error {
 			countries[cc] = &country{
 				cc:        cc,
 				name:      record[6],
-				continent: Populations[cc].continent,
+				continent: Countries[cc].Continent,
 			}
 		}
 
@@ -138,14 +138,18 @@ func extractEcdc(icfg influxConfig, url string) error {
 		nd, _ := strconv.Atoi(record[5])
 
 		p := point{
-			date:       parsedWhen,
-			newCases:   nc,
-			newDeaths:  nd,
-			population: Populations[cc].population,
+			date:      parsedWhen,
+			newCases:  nc,
+			newDeaths: nd,
 		}
 
+		if p.newCasesBuffer == nil {
+			p.newCasesBuffer = []int{0, 0, 0, 0, 0, 0, 0}
+		}
 		if len(countries[cc].points) > 0 {
 			prev := countries[cc].points[len(countries[cc].points)-1]
+			p.newCasesBuffer = prev.newCasesBuffer[1:6]
+			p.newCasesBuffer = append(p.newCasesBuffer, p.newCases)
 			p.sumDeaths = prev.sumDeaths + p.newDeaths
 			p.sumCases = prev.sumCases + p.newCases
 			if prev.newDeaths != 0 {
@@ -176,18 +180,21 @@ func sendData(icfg influxConfig, rec map[string]*country, measurement string) er
 	})
 
 	for _, entry := range rec {
-		var gh string
-		if _, ok := Coordinates[entry.cc]; !ok {
-			log.Warnf("unable to find geohash for %s", entry.cc)
-		} else {
-			gh = geohash.Encode(Coordinates[entry.cc][0], Coordinates[entry.cc][1])
+		if _, ok := Countries[entry.cc]; !ok {
+			log.Warnf("unable to find country %s; skipping", entry.cc)
+			continue
 		}
+
+		if Countries[entry.cc].Geohash == "" {
+			log.Warnf("unable to find geohash for %s", entry.cc)
+		}
+
 		tags := map[string]string{
-			"country":   entry.name,
+			"country":   Countries[entry.cc].Name,
 			"region":    entry.region,
-			"continent": entry.continent,
+			"continent": Countries[entry.cc].Continent,
 			"cc":        entry.cc,
-			"geohash":   gh,
+			"geohash":   Countries[entry.cc].Geohash,
 		}
 
 		for _, p := range entry.points {
@@ -198,10 +205,14 @@ func sendData(icfg influxConfig, rec map[string]*country, measurement string) er
 				"sumCases":     p.sumCases,
 				"growthDeaths": p.growthDeaths,
 				"growthCases":  p.growthCases,
-				"population":   p.population,
+				"newCases7d":   sum(p.newCasesBuffer...),
+				"population":   Countries[entry.cc].Population,
 			}
 
-			// fmt.Printf("%#v\n", fields)
+			if entry.cc == "FR" {
+				fmt.Printf("%#v\n", fields)
+			}
+
 			pt, err := influx.NewPoint(
 				measurement,
 				tags,
@@ -225,12 +236,12 @@ func sendData(icfg influxConfig, rec map[string]*country, measurement string) er
 	return nil
 }
 
-func remap(country string) string {
-	short, ok := CC[country]
+func sum(input ...int) int {
+	sum := 0
 
-	if ok {
-		return short
+	for i := range input {
+		sum += input[i]
 	}
 
-	return country
+	return sum
 }

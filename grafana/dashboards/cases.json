@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "id": 335,
-  "iteration": 1584354957210,
+  "id": 3,
+  "iteration": 1585662534556,
   "links": [],
   "panels": [
     {
@@ -57,7 +57,7 @@
         "justifyMode": "auto",
         "orientation": "auto"
       },
-      "pluginVersion": "6.6.1",
+      "pluginVersion": "6.6.2",
       "repeat": "country",
       "repeatDirection": "h",
       "scopedVars": {
@@ -128,7 +128,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 6
+        "y": 3
       },
       "hiddenSeries": false,
       "id": 2,
@@ -262,7 +262,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 3
       },
       "hideEmpty": false,
       "hideZero": false,
@@ -273,10 +273,18 @@
       "mapCenterLatitude": 0,
       "mapCenterLongitude": 0,
       "maxDataPoints": 1,
+      "mouseWheelZoom": false,
       "options": {},
       "showLegend": true,
       "stickyLabels": false,
       "tableLabel": "cc",
+      "tableQueryOptions": {
+        "geohashField": "geohash",
+        "latitudeField": "latitude",
+        "longitudeField": "longitude",
+        "metricField": "metric",
+        "queryType": "geohash"
+      },
       "targets": [
         {
           "groupBy": [
@@ -348,7 +356,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 3,
@@ -479,7 +487,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 17
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 6,
@@ -667,7 +675,9 @@
   "refresh": false,
   "schemaVersion": 22,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "cases"
+  ],
   "templating": {
     "list": [
       {
@@ -720,5 +730,5 @@
   "timezone": "",
   "title": "Cases",
   "uid": "Yqhy1iuWk",
-  "version": 40
+  "version": 1
 }
