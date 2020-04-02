@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/csv"
+	"strings"
 
 	"fmt"
 	"math/rand"
 	"net/http"
+
 	"strconv"
 	"time"
 
@@ -102,14 +106,38 @@ func extractEcdc(icfg influxConfig, url string) error {
 
 	defer r.Body.Close()
 
-	csv := csv.NewReader(r.Body)
-	defer r.Body.Close()
+	// dump, err := httputil.DumpResponse(r, true)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// fmt.Printf("%q", dump)
+
+	buffer := []byte{}
+	s := bufio.NewScanner(r.Body)
+	for s.Scan() {
+		b := s.Text()
+		if strings.Contains(b, "Eustatius") {
+			log.Info("stripping Eustatius line")
+			continue
+		}
+
+		buffer = append(buffer, b...)
+		buffer = append(buffer, '\n')
+	}
+
+	csv := csv.NewReader(bytes.NewReader(buffer))
 
 	countries := make(map[string]*country)
 
 	// Skip first record
 	csv.Read()
-	all, _ := csv.ReadAll()
+	all, err := csv.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	log.Infof("received %d points from %s", len(all), url)
 
 	// Reverse array entries
 	for i, j := 0, len(all)-1; i < j; i, j = i+1, j-1 {
@@ -196,6 +224,8 @@ func sendData(icfg influxConfig, rec map[string]*country, measurement string) er
 			"cc":        entry.cc,
 			"geohash":   Countries[entry.cc].Geohash,
 		}
+
+		log.Infof("adding %d points for %s", len(entry.points), entry.cc)
 
 		for _, p := range entry.points {
 			fields := map[string]interface{}{
