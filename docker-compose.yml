@@ -9,7 +9,7 @@ services:
       USER: ${INFLUXDB_ADMIN_USER}
       PASS: ${INFLUXDB_ADMIN_PASSWORD}
       SERVER: http://influxdb:8086
-      DELAY: 60
+      DELAY: ${DELAY}
     links:
         - influxdb
 

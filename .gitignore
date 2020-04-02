@@ -2,3 +2,4 @@ grafana/types.go
 covina
 *.csv
 .env
+index.html
