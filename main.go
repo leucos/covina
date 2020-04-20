@@ -169,7 +169,7 @@ func extractEcdc(icfg influxConfig, url string) error {
 			}
 		}
 
-		parsedWhen, err := time.Parse("1/2/2006", record[fields["date"]])
+		parsedWhen, err := time.Parse("02/01/2006", record[fields["date"]])
 		if err != nil {
 			log.Warnf("unable to parse time %s: %v", record[fields["date"]], err)
 			continue
