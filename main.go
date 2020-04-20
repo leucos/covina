@@ -98,6 +98,20 @@ func run(icfg influxConfig) error {
 }
 
 func extractEcdc(icfg influxConfig, url string) error {
+	fields := map[string]int{
+		"date":      0,
+		"day":       1,
+		"month":     2,
+		"year":      3,
+		"cases":     4,
+		"deaths":    5,
+		"cc":        6,
+		"continent": 7,
+		"ctc":       8,
+		"pop":       9,
+		"name":      10,
+	}
+
 	r, err := http.Get(url)
 
 	if err != nil {
@@ -145,25 +159,24 @@ func extractEcdc(icfg influxConfig, url string) error {
 	}
 
 	for _, record := range all {
-		cc := record[7]
+		cc := record[fields["cc"]]
 
 		if _, ok := countries[cc]; !ok {
 			countries[cc] = &country{
 				cc:        cc,
-				name:      record[6],
+				name:      record[fields["name"]],
 				continent: Countries[cc].Continent,
 			}
 		}
 
-		dte := fmt.Sprintf("%s/%s/%s", record[3], record[2], record[1])
-		parsedWhen, err := time.Parse("2006/1/2", dte)
+		parsedWhen, err := time.Parse("2006/1/2", record[fields["date"]])
 		if err != nil {
-			log.Warnf("unable to parse time %s: %v", dte, err)
+			log.Warnf("unable to parse time %s: %v", record[fields["date"]], err)
 			continue
 		}
 
-		nc, _ := strconv.Atoi(record[4])
-		nd, _ := strconv.Atoi(record[5])
+		nc, _ := strconv.Atoi(record[fields["cases"]])
+		nd, _ := strconv.Atoi(record[fields["deaths"]])
 
 		p := point{
 			date:      parsedWhen,

@@ -42,6 +42,19 @@ Check http://127.0.0.1:3000 and login with `GF_SECURITY_ADMIN_USER` /
 
 Send PRs !!
 
+## Source format
+
+Unfortunately, the source format is very unstable. Format changes every other 
+day. At this commit's date, it has been changed at least 5 times...
+
+For the record, on 20200420, the CSV format is the following:
+
+```
+dateRep	day	month	year	cases	deaths	geoId	continentExp	countryterritoryCode	popData2018	countriesAndTerritories
+20/04/2020	20	4	2020	88	3	AF	Asia	AFG	37172386	Afghanistan
+...
+```
+
 ## Disclaimer
 
 I am no expert at anything. Do not take anything here for granted.
