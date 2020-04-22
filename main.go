@@ -105,11 +105,11 @@ func extractEcdc(icfg influxConfig, url string) error {
 		"year":      3,
 		"cases":     4,
 		"deaths":    5,
-		"cc":        6,
-		"continent": 7,
+		"name":      6,
+		"cc":        7,
 		"ctc":       8,
 		"pop":       9,
-		"name":      10,
+		"continent": 10,
 	}
 
 	r, err := http.Get(url)

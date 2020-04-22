@@ -55,6 +55,13 @@ dateRep	day	month	year	cases	deaths	geoId	continentExp	countryterritoryCode	popD
 ...
 ```
 
+Changed on 20200421:
+
+```
+dateRep,day,month,year,cases,deaths,countriesAndTerritories,geoId,countryterritoryCode,popData2018,continentExp
+22/04/2020,22,4,2020,61,1,Afghanistan,AF,AFG,37172386,Asia
+```
+
 ## Disclaimer
 
 I am no expert at anything. Do not take anything here for granted.
