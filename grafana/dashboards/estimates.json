@@ -2,6 +2,7 @@
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:16",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -15,8 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "id": 6,
-  "iteration": 1588102765982,
+  "iteration": 1588103545362,
   "links": [],
   "panels": [
     {
@@ -525,14 +525,14 @@
     },
     {
       "datasource": "covina",
-      "description": "Percentage of population that will be killed by the virus",
+      "description": "Estimated fatalities at selected CFR and selected prevalence",
       "gridPos": {
-        "h": 4,
-        "w": 5,
+        "h": 9,
+        "w": 9,
         "x": 6,
         "y": 13
       },
-      "id": 10,
+      "id": 17,
       "options": {
         "colorMode": "value",
         "fieldOptions": {
@@ -540,6 +540,7 @@
             "lastNotNull"
           ],
           "defaults": {
+            "decimals": 1,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
@@ -553,14 +554,15 @@
                   "value": 80
                 }
               ]
-            }
+            },
+            "unit": "short"
           },
           "overrides": [],
           "values": false
         },
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "horizontal"
+        "orientation": "auto"
       },
       "pluginVersion": "6.7.2",
       "targets": [
@@ -579,10 +581,9 @@
               "type": "fill"
             }
           ],
-          "measurement": "covid",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
+          "query": "SELECT last(\"population\")  *  ($prevalence/100)*($cfr/100) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -590,37 +591,31 @@
             [
               {
                 "params": [
-                  "sumCases"
+                  "value"
                 ],
                 "type": "field"
               },
               {
                 "params": [],
-                "type": "last"
+                "type": "mean"
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "country",
-              "operator": "=~",
-              "value": "/^$country$/"
-            }
-          ]
+          "tags": []
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Kill index (@current CFR)",
+      "title": "Est. Fatalities",
       "type": "stat"
     },
     {
-      "content": "\n# Fatalities estimation\n\nInsert `prevalence` and `CFR` (in percent) to calculate the cumulative falatilies for this country (defaults come from Institut Pasteur)\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly; R0 is estimated to be at 3.3 without lockdown (yielding a 77% required prevalence to stop the spread)\n- CFR is over-estimated since not everyone is tested\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n  - https://www.pasteur.fr/fr/espace-presse/documents-presse/covid-19-modelisation-indique-que-pres-6-francais-ont-ete-infectes",
+      "content": "\n# Fatalities estimation\n\nInsert `prevalence` and `CFR` (in percent) to calculate the cumulative falatilies for this country (defaults come from Institut Pasteur)\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly; R0 is estimated to be at 3.3 without lockdown (yielding a 77% required prevalence to stop the spread)\n- CFR displayed here is over-estimated since not everyone is tested (CFR is presumed to be around 0.53%)\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n  - https://www.pasteur.fr/fr/espace-presse/documents-presse/covid-19-modelisation-indique-que-pres-6-francais-ont-ete-infectes",
       "datasource": null,
       "gridPos": {
-        "h": 8,
-        "w": 13,
-        "x": 11,
+        "h": 9,
+        "w": 9,
+        "x": 15,
         "y": 13
       },
       "id": 15,
@@ -635,7 +630,7 @@
       "datasource": "covina",
       "description": "Percentage of population affected by the virus",
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 6,
         "x": 0,
         "y": 17
@@ -722,92 +717,6 @@
       "timeShift": null,
       "title": "Current prevalence",
       "type": "stat"
-    },
-    {
-      "datasource": "covina",
-      "description": "Estimated fatalities at selected CFR and selected prevalence",
-      "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 6,
-        "y": 17
-      },
-      "id": 17,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "decimals": 1,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": [],
-          "values": false
-        },
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.7.2",
-      "targets": [
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT last(\"population\")  *  ($prevalence/100)*($cfr/100) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Est. Fatalities",
-      "type": "stat"
     }
   ],
   "refresh": false,
@@ -819,6 +728,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "France",
           "value": "France"
         },
@@ -844,9 +754,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "60",
-          "value": "60"
+          "selected": false,
+          "text": "77",
+          "value": "77"
         },
         "hide": 0,
         "label": "Prevalence (%)",
@@ -865,15 +775,15 @@
       {
         "current": {
           "selected": false,
-          "text": "1",
-          "value": "1"
+          "text": "0.53",
+          "value": "0.53"
         },
         "hide": 0,
         "label": "Selected CFR",
         "name": "cfr",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "0.53",
             "value": "0.53"
           }
@@ -908,5 +818,5 @@
   "variables": {
     "list": []
   },
-  "version": 6
+  "version": 1
 }
