@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "iteration": 1588103545362,
+  "iteration": 1588103876669,
   "links": [],
   "panels": [
     {
@@ -540,7 +540,7 @@
             "lastNotNull"
           ],
           "defaults": {
-            "decimals": 1,
+            "decimals": 3,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
@@ -728,9 +728,9 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "text": "France",
-          "value": "France"
+          "selected": false,
+          "text": "United States",
+          "value": "United States"
         },
         "datasource": "covina",
         "definition": "SHOW TAG  VALUES WITH KEY= \"country\"",
@@ -763,7 +763,7 @@
         "name": "prevalence",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "77",
             "value": "77"
           }
@@ -774,7 +774,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "0.53",
           "value": "0.53"
         },
