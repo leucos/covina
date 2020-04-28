@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "id": 5,
-  "iteration": 1586259912513,
+  "id": 6,
+  "iteration": 1588102765982,
   "links": [],
   "panels": [
     {
@@ -116,6 +116,61 @@
           ]
         },
         {
+          "alias": "0.4% CFR",
+          "groupBy": [
+            {
+              "params": [
+                "1d"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "country"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "covid",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sumCases"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "*0.004"
+                ],
+                "type": "math"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "country",
+              "operator": "=~",
+              "value": "/^$country$/"
+            }
+          ]
+        },
+        {
           "alias": "0.5% CFR",
           "groupBy": [
             {
@@ -157,6 +212,61 @@
               {
                 "params": [
                   "*0.005"
+                ],
+                "type": "math"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "country",
+              "operator": "=~",
+              "value": "/^$country$/"
+            }
+          ]
+        },
+        {
+          "alias": "0.75% CFR",
+          "groupBy": [
+            {
+              "params": [
+                "1d"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "country"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "covid",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sumCases"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "*0.0075"
                 ],
                 "type": "math"
               }
@@ -279,116 +389,6 @@
               "value": "/^$country$/"
             }
           ]
-        },
-        {
-          "alias": "2% CFR",
-          "groupBy": [
-            {
-              "params": [
-                "1d"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "country"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "covid",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sumCases"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              },
-              {
-                "params": [
-                  "*0.02"
-                ],
-                "type": "math"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "country",
-              "operator": "=~",
-              "value": "/^$country$/"
-            }
-          ]
-        },
-        {
-          "alias": "3% CFR",
-          "groupBy": [
-            {
-              "params": [
-                "1d"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "country"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "covid",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "F",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sumCases"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              },
-              {
-                "params": [
-                  "*0.03"
-                ],
-                "type": "math"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "country",
-              "operator": "=~",
-              "value": "/^$country$/"
-            }
-          ]
         }
       ],
       "thresholds": [],
@@ -436,8 +436,8 @@
       "datasource": "covina",
       "description": "Current Case Fatality Ratio",
       "gridPos": {
-        "h": 10,
-        "w": 5,
+        "h": 4,
+        "w": 6,
         "x": 0,
         "y": 13
       },
@@ -471,7 +471,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.7.0",
+      "pluginVersion": "6.7.2",
       "targets": [
         {
           "groupBy": [
@@ -527,9 +527,9 @@
       "datasource": "covina",
       "description": "Percentage of population that will be killed by the virus",
       "gridPos": {
-        "h": 5,
+        "h": 4,
         "w": 5,
-        "x": 5,
+        "x": 6,
         "y": 13
       },
       "id": 10,
@@ -562,7 +562,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.7.0",
+      "pluginVersion": "6.7.2",
       "targets": [
         {
           "groupBy": [
@@ -615,96 +615,12 @@
       "type": "stat"
     },
     {
-      "datasource": "covina",
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 10,
-        "y": 13
-      },
-      "id": 13,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": [],
-          "values": false
-        },
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.7.0",
-      "targets": [
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT last(\"population\")  *  ($prevalence/100)*(last(\"sumDeaths\")/last(\"sumCases\")) FROM \"covid\" WHERE (\"country\" =~ /^$country$/) AND $timeFilter GROUP BY time(1d) fill(null)",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Est. Fatalities (@current CFR)",
-      "type": "stat"
-    },
-    {
-      "content": "\n# Fatalities estimation\n\nInsert `prevalence` (in percent) to calculate the cumulative falatilies for this country.\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly, but countries take counter-measures\n- CFR is under-estimated since time symptoms and death varies between 2 and 8 weeks (see refs)\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n\n",
+      "content": "\n# Fatalities estimation\n\nInsert `prevalence` and `CFR` (in percent) to calculate the cumulative falatilies for this country (defaults come from Institut Pasteur)\n\nNotes:\n- prevalence for seasonal flu is between 3% and 14%\n- COVID-19 spreads more rapidly; R0 is estimated to be at 3.3 without lockdown (yielding a 77% required prevalence to stop the spread)\n- CFR is over-estimated since not everyone is tested\n\nRefs:\n  - https://ourworldindata.org/coronavirus\n  - https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf\n  - https://www.pasteur.fr/fr/espace-presse/documents-presse/covid-19-modelisation-indique-que-pres-6-francais-ont-ete-infectes",
       "datasource": null,
       "gridPos": {
-        "h": 10,
-        "w": 9,
-        "x": 15,
+        "h": 8,
+        "w": 13,
+        "x": 11,
         "y": 13
       },
       "id": 15,
@@ -719,10 +635,10 @@
       "datasource": "covina",
       "description": "Percentage of population affected by the virus",
       "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 5,
-        "y": 18
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 17
       },
       "id": 16,
       "options": {
@@ -755,7 +671,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal"
       },
-      "pluginVersion": "6.7.0",
+      "pluginVersion": "6.7.2",
       "targets": [
         {
           "groupBy": [
@@ -809,11 +725,12 @@
     },
     {
       "datasource": "covina",
+      "description": "Estimated fatalities at selected CFR and selected prevalence",
       "gridPos": {
-        "h": 5,
+        "h": 4,
         "w": 5,
-        "x": 10,
-        "y": 18
+        "x": 6,
+        "y": 17
       },
       "id": 17,
       "options": {
@@ -823,7 +740,7 @@
             "lastNotNull"
           ],
           "defaults": {
-            "decimals": 2,
+            "decimals": 1,
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
@@ -847,7 +764,7 @@
         "justifyMode": "auto",
         "orientation": "auto"
       },
-      "pluginVersion": "6.7.0",
+      "pluginVersion": "6.7.2",
       "targets": [
         {
           "groupBy": [
@@ -889,7 +806,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Est. Fatalities (@selected CFR)",
+      "title": "Est. Fatalities",
       "type": "stat"
     }
   ],
@@ -902,7 +819,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "France",
           "value": "France"
         },
@@ -937,12 +853,12 @@
         "name": "prevalence",
         "options": [
           {
-            "selected": true,
-            "text": "60",
-            "value": "60"
+            "selected": false,
+            "text": "77",
+            "value": "77"
           }
         ],
-        "query": "60",
+        "query": "77",
         "skipUrlSync": false,
         "type": "textbox"
       },
@@ -958,11 +874,11 @@
         "options": [
           {
             "selected": false,
-            "text": "1",
-            "value": "1"
+            "text": "0.53",
+            "value": "0.53"
           }
         ],
-        "query": "1",
+        "query": "0.53",
         "skipUrlSync": false,
         "type": "textbox"
       }
@@ -988,9 +904,9 @@
   },
   "timezone": "",
   "title": "Estimates",
-  "uid": "ZCaD6cCWz",
+  "uid": "zYKJrZeWz",
   "variables": {
     "list": []
   },
-  "version": 4
+  "version": 6
 }
